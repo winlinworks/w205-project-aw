@@ -25,9 +25,11 @@ Part 1 - Remaining Presidential Candidates
 
 Sources
 - FEC.gov/data
-	- Itemized individual contributions
+	- Campaign finance summary
+	- Individual contributions
 	- Other committees contributions
 	- Transfers from authorized committees
+	- Candidate loans
 	- Independent expenditures
 - Policy positions (from websites)
 - *** Recent ratified legislation related to policy 
