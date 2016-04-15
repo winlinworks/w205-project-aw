@@ -38,10 +38,12 @@ ITEM-REPT 	Report Type				  11-13    3s
 ITEM-PGI  	Primary-General Indicator		     14    1s  
 ITEM-MICRO	Microfilm Location (YYOORRRFFFF)   	  15-25   11s 
 ITEM-TRANS	Transaction Type 			  26-28	   3s  
+*** MISSING FIELD - Transaction Type Abbrev
 ITEM-NAME 	Contributor/Lender/Transfer Name	  29-62	  34s 
 ITEM-CTY  	City/Town  				  63-80	  18s 
 ITEM-ST   	State					  81-82	   2s  
 ITEM-ZIP  	Zip Code   				  83-87	   5s  
+*** MISSING FIELD - Employer
 ITEM-OCCU 	Occupation 				 88-122   35s 
 IT-TMN	Transaction Date - Month 			123-124    2d  
 IT-TDY	Transaction Date - Day   			125-126    2d  
@@ -49,7 +51,11 @@ IT-TCC	Transaction Date - Century 			127-128    2d
 IT-TYY	Transaction Date - Year  			129-130    2d  
 ITEM-AMT  	Amount 					131-137    7n  
 ITEM-OID  	Other Identification Number		138-146    9s  
+*** MISSING FIELD - Transaction ID
 ITEM-RN   	FEC Record Number			147-153    7s  
+*** MISSING FIELD
+*** MISSING FIELD
+*** MISSING FIELD
 
 Data Type:  s = string (alpha or alpha-numeric); d = date; n = numeric  
 

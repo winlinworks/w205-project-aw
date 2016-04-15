@@ -9,8 +9,11 @@ item_name:string,
 item_cty:string,
 item_st:string,
 item_zip:string,
+item_empl:string,
 item_occu:string,
 item_date:string,
 item_amt:float,
 item_oid:string,
-item_rn:string
+item_trans_id:string,
+item_rn:string,
+item_notes:string
