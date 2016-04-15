@@ -1,2 +1,2 @@
-test/mod-data/
-test/raw-data/
+test/data*
+test/FEC/20*
