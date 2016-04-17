@@ -22,44 +22,47 @@ from oauth2client.client import GoogleCredentials
 
 from transform import *
 
-def main(project_id = 'w205-project-1272'):
+PROJECT_ID = 'w205-project-1272'
+
+def main():
     # [START build_service]
     # Grab the application's default credentials from the environment.
     credentials = GoogleCredentials.get_application_default()
+
     # Construct the service object for interacting with the BigQuery API.
     bigquery_service = build('bigquery', 'v2', credentials=credentials)
     # [END build_service]
 
     try:
-        # [START run_query]
-        query_request = bigquery_service.jobs()
-        query_data = {
-            'query': (
-                'SELECT TOP(TRANSACTION_AMT,10) as amount, '
-                'COUNT(*) '
-                'FROM [test_data.itcont16];')
-        }
+        # # [START run_query]
+        # query_request = bigquery_service.jobs()
+        # query_data = {
+        #     'query': (
+        #         'SELECT TOP(TRANSACTION_AMT,10) as amount, '
+        #         'COUNT(*) '
+        #         'FROM [test_data.itcont16];')
+        # }
 
-        query_response = query_request.query(
-            projectId=project_id,
-            body=query_data).execute()
-        # [END run_query]
+        # query_response = query_request.query(
+        #     projectId=project_id,
+        #     body=query_data).execute()
+        # # [END run_query]
 
-        # [START print_results]
-        print('Query Results:')
-        for row in query_response['rows']:
-            print('\t'.join(field['v'] for field in row['f']))
-        # [END print_results]
+        # # [START print_results]
+        # print('Query Results:')
+        # for row in query_response['rows']:
+        #     print('\t'.join(field['v'] for field in row['f']))
+        # # [END print_results]
+
+        transformCommMaster(bigquery_service, PROJECT_ID)
+        transformCandMaster(bigquery_service, PROJECT_ID)
+        transformContribs(bigquery_service, PROJECT_ID)
 
     except HttpError as err:
         print('Error: {}'.format(err.content))
         raise err
 
-    transformCommMaster(bigquery_service, project_id)
-
-    transformCandMaster(bigquery_service, project_id)
-
-    transformContribs(bigquery_service, project_id)
+    
 
 
 if __name__ == '__main__':
@@ -71,8 +74,6 @@ if __name__ == '__main__':
     # main(args.project_id)
     
     main()
-  
-
     
 # [END all]
 
