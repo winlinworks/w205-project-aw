@@ -40,7 +40,7 @@ def transformCommittees():
 # Contributions by Committees (itpas2XX.txt)
 # 1. normalize cols: RPT_TP, TRANSACTION_TP, ENTITY_TP
 # 2. delete cols: IMAGE_NUM, TRAN_ID, FILE_NUM, MEMO_TEXT, SUB_ID
-# 3. filter rows: contains CMTE_ID from above, TRANSACTION_TP = {15, 15E, 15C}
+# 3. filter rows: contains CMTE_ID from above, TRANSACTION_TP = {15, 15E, 15C, 24K, 24E, 24A}
 # 4. transform values:
 #   - convert TRANSACTION_DT string to "mm-dd-yyyy" date format
 #   - standardize EMPLOYER string
