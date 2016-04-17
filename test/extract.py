@@ -1,73 +1,80 @@
 import sys
-from ftplib import FTP
+import os
+import socket
+import zipfile
+
 import urllib
-
-ftp = FTP('ftp.fec.gov')        # connect to host: ftp.fec.gov
-ftp.login()             # user = anonymous, pass = anonymous
-
-ftp.cwd('FEC')  # change directory to 'FEC'
-ftp.cwd('2016') # change directory to '2016'
-ftp.retrlines('LIST')   # list directory contents
-
-# Download data files:
-
-# 2016
-
-dfiles = ['cm16.zip', 'cn16.zip', 'pas216.zip', 'indiv16.zip']
-for filename in dfiles:
-  f = open(filename, 'wb')
-  ftp.retrbinary('RETR ' + filename, f.write)
-  f.close()
-
-#2014
-ftp.cwd('../2014') # change directory to 2014
-ftp.retrlines('LIST')  # list directory contents
-
-d4files = ['cm14.zip', 'cn14.zip', 'pas214.zip', 'indiv14.zip']
-for filename in d4files:
-   f = open(filename, 'wb')
-   ftp.retrbinary('RETR ' + filename, f.write)
-   f.close()
-
-#2012 files
-
-ftp.cwd('../2012')  # change directory to 2012
-ftp.retrlines('LIST')
-
-d2files = ['cm12.zip', 'cn12.zip', 'pas212.zip', 'indiv12.zip']
-for filename in d2files:
-   f = open(filename, 'wb')
-   ftp.retrbinary('RETR ' + filename, f.write)
-   f.close()
+import ftplib
+from ftplib import FTP
 
 
-#Now get the header files
+CURR_DIR = os.getcwd()              # parent directory where main apps are
+DEST_DIR = CURR_DIR + '/data_raw/'  # directory where files will be stored
+HOST = 'ftp.fec.gov'
 
 
-filenames = ['cm_header_file.csv', 'cn_header_file.csv', 'pas2_header_file.csv', 'indiv_header_file.csv']
-for name in filenames:
-    url = 'http://www.fec.com/finance/disclosure/metadata/' + name
-    urllib.urlretrieve(url, name)
+# dictionary for election years and associated file names
+FILE_DICT = {'2016': ['cm16.zip', 'cn16.zip', 'pas216.zip', 'indiv16.zip'],
+            '2014': ['cm14.zip', 'cn14.zip', 'pas214.zip', 'indiv14.zip'],
+            '2012': ['cm12.zip', 'cn12.zip', 'pas212.zip', 'indiv12.zip']}
+
+UNZIP_FILES = ['cm.txt', 'cn.txt', 'itcont.txt', 'pas2.txt']
+
+# downloads all raw zip files from ftp.fec.gov
+def getFiles():
+    try:
+        os.chdir(DEST_DIR)          # change local working directory
+
+        ftp = FTP('ftp.fec.gov')    # connect to host: ftp.fec.gov
+        ftp.login()                 # user = anonymous, pass = anonymous
+
+        # for each year
+        for key in FILE_DICT:
+            ftp.cwd('/FEC/' + key)      # move to matching FTP directory
+            ftp.retrlines('LIST')       # list files
+
+            filenames = FILE_DICT[key]  # get file names
+
+            # for each file name, download file from FTP site
+            for fn in filenames:
+                f = open(fn, 'wb')
+                ftp.retrbinary('RETR ' + fn, f.write)
+                f.close()
+
+    except ftplib.error_perm, e:
+        print 'ERROR: cannot read file "%s"' % fn
+        os.unlink(fn)
+
+    ftp.quit()
+    os.chdir(CURR_DIR)
+
+# unzips all raw zip files to text files, adds year suffix to text file name
+def unzipFiles():
+    os.chdir(DEST_DIR)
+
+    # for each year
+    for key in FILE_DICT:
+        suffix = key[2:]        # suffix for year
+
+        filenames = FILE_DICT[key]  # get file names
+
+        # unzip each file
+        for fn in filenames:
+            f = open(fn, 'rb')
+            zf = zipfile.ZipFile(f)
+            zf.extractall()
+            zf.close()
+
+        # add year suffix to each text file
+        for fn in os.listdir(DEST_DIR):         
+            if fn in UNZIP_FILES:
+                currfile = fn
+                newfile = fn[:-4] + suffix + '.txt'
+                os.rename(currfile, newfile)    # rename file
+
+    os.chdir(CURR_DIR)
 
 
-# 1. Committee Master
-#               - data: ftp://ftp.fec.gov/FEC/2016/cm16.zip, ../cm14.zip, ../cm12.zip
-#               - header: http://www.fec.gov/finance/disclosure/metadata/cm_header_file.csv
-
-# 2. Candidate Master
-#               - data: ftp://ftp.fec.gov/FEC/2016/cn16.zip, ../cn14.zip, ../cn12.zip
-#               - header: http://www.fec.gov/finance/disclosure/metadata/cn_header_file.csv
-
-# 3. Contributions to Candidates (and other expenditures) from Committees
-#               - data: ftp://ftp.fec.gov/FEC/2016/pas216.zip, ../pas214.zip, ../pas212.zip
-#               - header: http://www.fec.gov/finance/disclosure/metadata/pas2_header_file.csv
-
-# 4. Contributions by Individuals
-#               - data: ftp://ftp.fec.gov/FEC/2016/indiv16.zip, ../indiv14.zip, ../indiv12.zip
-#               - header: http://www.fec.gov/finance/disclosure/metadata/indiv_header_file.csv
-
-
-ftp.quit()
-
-
-
+if __name__ == '__main__':
+    # getFiles()
+    unzipFiles()
