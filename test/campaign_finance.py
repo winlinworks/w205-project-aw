@@ -20,6 +20,7 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from oauth2client.client import GoogleCredentials
 
+from extract import *
 from transform import *
 
 PROJECT_ID = 'w205-project-1272'
@@ -34,29 +35,25 @@ def main():
     # [END build_service]
 
     try:
-        # # [START run_query]
-        # query_request = bigquery_service.jobs()
-        # query_data = {
-        #     'query': (
-        #         'SELECT TOP(TRANSACTION_AMT,10) as amount, '
-        #         'COUNT(*) '
-        #         'FROM [test_data.itcont16];')
-        # }
+        # [START run_query]
+        query_request = bigquery_service.jobs()
+        query_data = {
+            'query': (
+                'SELECT TOP(TRANSACTION_AMT,10) as amount, '
+                'COUNT(*) '
+                'FROM [test_data.itcont16];')
+        }
 
-        # query_response = query_request.query(
-        #     projectId=project_id,
-        #     body=query_data).execute()
-        # # [END run_query]
+        query_response = query_request.query(
+            projectId=PROJECT_ID,
+            body=query_data).execute()
+        # [END run_query]
 
-        # # [START print_results]
-        # print('Query Results:')
-        # for row in query_response['rows']:
-        #     print('\t'.join(field['v'] for field in row['f']))
-        # # [END print_results]
-
-        transformCommMaster(bigquery_service, PROJECT_ID)
-        transformCandMaster(bigquery_service, PROJECT_ID)
-        transformContribs(bigquery_service, PROJECT_ID)
+        # [START print_results]
+        print('Query Results:')
+        for row in query_response['rows']:
+            print('\t'.join(field['v'] for field in row['f']))
+        # [END print_results]
 
     except HttpError as err:
         print('Error: {}'.format(err.content))
@@ -66,6 +63,9 @@ def main():
 
 
 if __name__ == '__main__':
+
+    main()
+    
     # parser = argparse.ArgumentParser(
     #     description=__doc__,
     #     formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -73,7 +73,6 @@ if __name__ == '__main__':
     # args = parser.parse_args()
     # main(args.project_id)
     
-    main()
     
 # [END all]
 
