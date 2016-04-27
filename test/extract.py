@@ -5,7 +5,7 @@ import urllib
 import ftplib
 from ftplib import FTP
 
-
+# directory structure
 # ./data_raw - folder for raw data files
 # ./data_new - folder for transformed data files
 
@@ -63,11 +63,11 @@ def getFiles():
 
 # unzips all raw zip files to text files, adds year suffix to text file name
 def unzipFiles():
-    os.chdir(RAW_DIR)          # move to raw data directory
+    os.chdir(RAW_DIR)       # move to raw data directory
 
     # for each year
     for k, v in FILE_DICT.iteritems():
-        suffix = k[2:]        # suffix for year
+        suffix = k[2:]      # suffix for year
 
         # unzip each file
         for fn in v:
