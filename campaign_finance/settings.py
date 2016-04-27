@@ -77,9 +77,9 @@ HEADERS = {
     }
 }
 
-# political parties to include
-INCLUDE_PTY = ['DEM', 'REP', 'IND']
 
+INCLUDE_PTY = ['DEM', 'REP', 'IND']                             # political parties to include
+INCLUDE_TRANS = ['15', '15E', '15C', '24K', '24E', '24A']       # transaction types to include
 
 
 ###### BigQuery info

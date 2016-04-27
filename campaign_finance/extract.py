@@ -14,12 +14,14 @@ from settings import *
 
 def initFiles():
     print('Setting up Campaign Finance Explorer...')
+
     # unzip and rename raw files for each year
-    for y in ELECT_YR:
-        getCandComms(y)                 # download candidate and committee files
-        getContribs(y)                  # download contribution files
-        unzipFiles(CANDCOMM_FILES, y)    # candidate and committee files
-        unzipFiles(CONTRIB_FILES, y)     # contribution files
+    for year in ELECT_YR:
+        getFiles(CANDCOMM_FILES, year)      # download candidate and committee files
+        unzipFiles(CANDCOMM_FILES, year)    # candidate and committee files
+
+        getFiles(CONTRIB_FILES, year)       # download contribution files    
+        unzipFiles(CONTRIB_FILES, year)     # contribution files
 
     # remove all zip files from raw data directory
     for fn in os.listdir(RAW_DIR):
@@ -29,26 +31,9 @@ def initFiles():
             print('Removed: %s' % fn)
 
 
-###### updateFiles - calls functions to download, unzip, and rename files for a given year
+##### getFiles - downloads candidate and committee files and file headers from FEC site
 
-def updateFiles(year):
-    updateCandComms(year)   # download candidate and committee files
-    updateContribs(year)    # download contribution files
-    
-    unzipYear(CANDCOMM_FILES, year)    # candidate and committee files
-    unzipYear(CONTRIB_FILES, year)     # contribution files
-
-    # remove all zip files from raw data directory
-    for fn in os.listdir(RAW_DIR):
-        if fn.endswith('zip'):
-            os.remove(fn)
-
-            print('Removed: %s' % fn)
-
-
-##### updateCandComms - downloads candidate and committee files and file headers from FEC site
-
-def getCandComms(year):
+def getFiles(file_dict, year):
     try:
         ftp = FTP(HOST)           # connect to host fec.ftp.gov
         ftp.login()
@@ -57,34 +42,7 @@ def getCandComms(year):
         # ftp.retrlines('LIST')     # list files
 
         # download files
-        for fn in CANDCOMM_FILES[year]['zip']:
-            f = open(RAW_DIR + fn, 'wb')
-            ftp.retrbinary('RETR ' + fn, f.write)
-            f.close()
-
-            print('Download complete: %s' % fn)
-
-    except ftplib.error_perm, e:
-        print 'ERROR: cannot read file "%s"' % fn
-        os.unlink(fn)
-
-    ftp.quit()
-
-
-###### updateContribs - downloads contribution files and file headers from FEC site
-
-def getContribs(year):
-    try:
-        ftp = FTP(HOST)             # connect to host ftp.fec.gov
-        ftp.login()
-
-        ftp.cwd('/FEC/' + year)     # move to FTP directory matching year
-        # ftp.retrlines('LIST')       # list files
-
-        # download files
-        for fn in CONTRIB_FILES[year]['zip']:
-            print('Download started: %s' % fn)
-
+        for fn in file_dict[year]['zip']:
             f = open(RAW_DIR + fn, 'wb')
             ftp.retrbinary('RETR ' + fn, f.write)
             f.close()
