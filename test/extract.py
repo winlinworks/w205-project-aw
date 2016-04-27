@@ -1,55 +1,111 @@
-subliimport sys, os
-import zipfile
+import sys
+import os
 
 import urllib
 import ftplib
 from ftplib import FTP
 
-# directory structure
-# ./data_raw - folder for raw data files
-# ./data_new - folder for transformed data files
+import zipfile
 
-    pass
-PROJ_DIR = os.getcwd()              # parent directory where main apps are
-RAW_DIR = PROJ_DIR + '/data_raw/'  # directory where files will be stored
+PROJ_DIR = os.getcwd()                  # main project directory
+RAW_DIR = PROJ_DIR + '/data_raw'        # directory for raw data files
+MASTER_DIR = PROJ_DIR + '/data_master'  # directory for transformed master data files
+
 HOST = 'ftp.fec.gov'
 
+ELECT_YR = ['2012', '2014', '2016']
 
-# dictionary for election years and downloaded file names
-FILE_DICT = {
-            '2016': ['cm16.zip', 'cn16.zip', 'pas216.zip', 'indiv16.zip'],
-            '2014': ['cm14.zip', 'cn14.zip', 'pas214.zip', 'indiv14.zip'],
-            '2012': ['cm12.zip', 'cn12.zip', 'pas212.zip', 'indiv12.zip']
-            }
+# dict for candidate and committee files
+CANDCOMM_FILES = {
+    'head': ['cm_header_file.csv', 'cn_header_file.csv'],
+    'txt': ['cm.txt', 'cn.txt'],
+    '2016': ['cm16.zip', 'cn16.zip'],
+    '2014': ['cm14.zip', 'cn14.zip'],
+    '2012': ['cm12.zip', 'cn12.zip']
+    }
 
-# file names for header files, same across all years
-HEADER_FILES = ['cm_header_file.csv', 'cn_header_file.csv', 'pas2_header_file.csv', 'indiv_header_file.csv']
+# dict for contribution files
+CONTRIB_FILES = {
+    'head': ['indiv_header_file.csv', 'pas2_header_file.csv', 'oth_header_file.csv'],
+    'txt': ['itcont.txt', 'itpas2.txt', 'itoth.txt'],
+    '2016': ['indiv16.zip', 'pas216.zip', 'oth16.zip'],
+    '2014': ['indiv14.zip', 'pas214.zip', 'oth14.zip'],
+    '2012': ['indiv12.zip', 'pas212.zip', 'oth12.zip'],
+    }
 
-# file names for unzipped text files, same across all years
-UNZIP_FILES = ['cm.txt', 'cn.txt', 'itcont.txt', 'pas2.txt']
 
+##### getCandComms - downloads candidate and committee files and file headers from FEC site
 
-# downloads raw data for contributions, candidates, and committees from ftp.fec.gov
-def getFiles():
+def getCandComms():
     try:
-        ftp = FTP('ftp.fec.gov')    # connect to host: ftp.fec.gov
-        ftp.login()                 # user = anonymous, pass = anonymous
+        ftp = FTP(HOST)             # connect to host ftp.fec.gov
+        ftp.login()
 
         os.chdir(RAW_DIR)           # move to raw data directory
 
         # download files for each year
-        for k, v in FILE_DICT.iteritems():
-            ftp.cwd('/FEC/' + k)      # move to FTP directory matching year
+        for y in ELECT_YR:
+            ftp.cwd('/FEC/' + y)      # move to FTP directory matching year
             ftp.retrlines('LIST')     # list files
 
             # download files
-            for fn in v:
+            for fn in CANDCOMM_FILES[y]:
                 f = open(fn, 'wb')
                 ftp.retrbinary('RETR ' + fn, f.write)
                 f.close()
 
-        # download header files
-        for fn in HEADER_FILES:
+    except ftplib.error_perm, e:
+        print 'ERROR: cannot read file "%s"' % fn
+        os.unlink(fn)
+
+    ftp.quit()
+    os.chdir(PROJ_DIR)      # return to project directory
+
+
+###### getContribs - downloads contribution files and file headers from FEC site
+
+def getContribs():
+    try:
+        ftp = FTP(HOST)             # connect to host ftp.fec.gov
+        ftp.login()
+
+        os.chdir(RAW_DIR)           # move to raw data directory
+
+        # download files for each year
+        for y in ELECT_YR:
+            ftp.cwd('/FEC/' + y)      # move to FTP directory matching year
+            ftp.retrlines('LIST')     # list files
+
+            # download files
+            for fn in CONTRIB_FILES[y]:
+                f = open(fn, 'wb')
+                ftp.retrbinary('RETR ' + fn, f.write)
+                f.close()
+
+    except ftplib.error_perm, e:
+        print 'ERROR: cannot read file "%s"' % fn
+        os.unlink(fn)
+
+    ftp.quit()
+    os.chdir(PROJ_DIR)      # return to project directory
+
+
+###### getHeaders - downloads file headers from ftp.fec.gov
+
+def getHeaders():
+    try:
+        ftp = FTP(HOST)             # connect to host ftp.fec.gov
+        ftp.login()
+
+        os.chdir(RAW_DIR)           # move to raw data directory
+
+        # download candidate and committee file headers
+        for fn in CANDCOMM_FILES['head']:
+            url = 'http://www.fec.com/finance/disclosure/metadata/' + fn
+            urllib.urlretrieve(url, fn)
+
+        # download contribution file headers
+        for fn in CONTRIB_FILES['head']:
             url = 'http://www.fec.com/finance/disclosure/metadata/' + fn
             urllib.urlretrieve(url, fn)
 
@@ -61,31 +117,120 @@ def getFiles():
     os.chdir(PROJ_DIR)      # return to project directory
 
 
-# unzips all raw zip files to text files, adds year suffix to text file name
-def unzipFiles():
+###### unzipYear - unzips files to text files, renames them with year appended
+
+def unzipYear(file_dict, year):
+
+    # unzip file for given year
+    for fn in file_dict[year]:
+        f = open(fn, 'rb')
+        zf = zipfile.ZipFile(f)
+        zf.extractall()
+        zf.close()
+
+    # append year to text files
+    for fn in file_dict['txt']:
+        newfile = fn[:-4] + year[2:] + '.txt'
+        os.rename(fn, newfile)
+
+
+###### initFiles - calls functions to download, unzip, and rename files for all years
+
+def initFiles():
+    getCandComms()      # download candidate and committee files
+    getContribs()       # download contribution files
+    getHeaders()        # download file headers
+
     os.chdir(RAW_DIR)       # move to raw data directory
+    
+    # unzip and rename raw files for each year
+    for y in ELECT_YR:
+        unzipYear(CANDCOMM_FILES, y)    # candidate and committee files
+        unzipYear(CONTRIB_FILES, y)     # contribution files
 
-    # for each year
-    for k, v in FILE_DICT.iteritems():
-        suffix = k[2:]      # suffix for year
-
-        # unzip each file
-        for fn in v:
-            f = open(fn, 'rb')
-            zf = zipfile.ZipFile(f)
-            zf.extractall()
-            zf.close()
-
-        # add year suffix to each text file
-        for fn in os.listdir(RAW_DIR):         
-            if fn in UNZIP_FILES:
-                currfile = fn
-                newfile = fn[:-4] + suffix + '.txt'
-                os.rename(currfile, newfile)    # rename file
+    # remove all zip files
+    for fn in os.listdir(os.getcwd()):
+        if fn.endswith('zip'):
+            os.remove(fn)
 
     os.chdir(PROJ_DIR)      # return to project directory
 
 
+##### updateCandComms - downloads candidate and committee files and file headers from FEC site
+
+def updateCandComms(year):
+    try:
+        ftp = FTP(HOST)           # connect to host fec.ftp.gov
+        ftp.login()
+
+        os.chdir(RAW_DIR)         # move to raw data directory
+
+        ftp.cwd('/FEC/' + year)      # move to FTP directory matching year
+        ftp.retrlines('LIST')     # list files
+
+        # download files
+        for fn in CANDCOMM_FILES[year]:
+            f = open(fn, 'wb')
+            ftp.retrbinary('RETR ' + fn, f.write)
+            f.close()
+
+    except ftplib.error_perm, e:
+        print 'ERROR: cannot read file "%s"' % fn
+        os.unlink(fn)
+
+    ftp.quit()
+    os.chdir(PROJ_DIR)      # return to project directory
+
+
+###### updateContribs - downloads contribution files and file headers from FEC site
+
+def updateContribs(year):
+    try:
+        ftp = FTP(HOST)             # connect to host ftp.fec.gov
+        ftp.login()
+
+        os.chdir(RAW_DIR)           # move to raw data directory
+
+        ftp.cwd('/FEC/' + year)     # move to FTP directory matching year
+        ftp.retrlines('LIST')       # list files
+
+        # download files
+        for fn in CONTRIB_FILES[year]:
+            f = open(fn, 'wb')
+            ftp.retrbinary('RETR ' + fn, f.write)
+            f.close()
+
+    except ftplib.error_perm, e:
+        print 'ERROR: cannot read file "%s"' % fn
+        os.unlink(fn)
+
+    ftp.quit()
+    os.chdir(PROJ_DIR)      # return to project directory
+
+
+###### updateFiles - calls functions to download, unzip, and rename files for a given year
+
+def updateFiles(year):
+    updateCandComms(year)   # download candidate and committee files
+    updateContribs(year)    # download contribution files
+
+    os.chdir(RAW_DIR)       # move to raw data directory
+    
+    unzipYear(CANDCOMM_FILES, year)    # candidate and committee files
+    unzipYear(CONTRIB_FILES, year)     # contribution files
+
+    # remove all zip files
+    for fn in os.listdir(os.getcwd()):
+        if fn.endswith('zip'):
+            os.remove(fn)
+
+    os.chdir(PROJ_DIR)      # return to project directory
+
+###### MAIN
+
 if __name__ == '__main__':
-    getFiles()
-    unzipFiles()
+
+    # initFiles()
+    
+    # updateFiles('2016')
+    
