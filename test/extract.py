@@ -1,4 +1,4 @@
-import sys, os
+subliimport sys, os
 import zipfile
 
 import urllib
@@ -6,6 +6,10 @@ import ftplib
 from ftplib import FTP
 
 
+# ./data_raw - folder for raw data files
+# ./data_new - folder for transformed data files
+
+    pass
 PROJ_DIR = os.getcwd()              # parent directory where main apps are
 RAW_DIR = PROJ_DIR + '/data_raw/'  # directory where files will be stored
 HOST = 'ftp.fec.gov'
