@@ -1,4 +1,4 @@
-"""Command-line application that loads data into BigQuery via HTTP POST.
+su"""Command-line application that loads data into BigQuery via HTTP POST.
 
 This sample is used on this page:
 

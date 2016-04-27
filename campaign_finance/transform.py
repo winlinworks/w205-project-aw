@@ -26,10 +26,10 @@ from settings import *
 
 # Candidate Master (cmXX.txt)
 # 1. filter out cols: CAND_ST1, CAND_ST2, CAND_CITY, CAND_ST, CAND_ZIP
-# 2. normalize cols: CAND_OFFICE, CAND_ICI, CAND_STATUS, CAND_PTY_AFFILIATION
-# 3. filter rows (?):
+# 2. filter rows (?):
 #   - CAND_OFFICE = P
 #   - CAND_PTY_AFFILIATION = DEM, REP, IND
+# 3. normalize cols: CAND_OFFICE, CAND_ICI, CAND_STATUS, CAND_PTY_AFFILIATION
 
 
 def filterCands():
