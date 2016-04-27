@@ -24,41 +24,47 @@ from settings import *
 # - Merge: pd.merge(df1, df2, on='field', how='left')
 # - Join: df1.set_index('field', inplace=True); df1.join(df2)
 
-# Candidate Master (cmXX.txt)
+###### filterCands
 # 1. filter out cols: CAND_ST1, CAND_ST2, CAND_CITY, CAND_ST, CAND_ZIP
-# 2. filter rows (?):
-#   - CAND_OFFICE = P
-#   - CAND_PTY_AFFILIATION = DEM, REP, IND
+# 2. filter rows: CAND_PTY_AFFILIATION = DEM, REP, IND
 # 3. normalize cols: CAND_OFFICE, CAND_ICI, CAND_STATUS, CAND_PTY_AFFILIATION
 
-
 def filterCands():
+    head = HEADERS['cn']['head']       # read header file
+    keep = HEADERS['cn']['keep']       # set col names to keep
 
-    os.chdir(RAW_DIR)        # change to raw data folder
-
-    fn = CANDCOMM_FILES['head'][1]  # get header file name
-    colnames = pd.read_csv(fn)      # read header file
-    cols = range(0,10)              # set col array
-
-    fn = 'cn16.txt'
-    df = pd.read_table(fn, sep='|', header=None, names=colnames, index_col=0, usecols=cols)  # read csv into dataframe, set headers, set index
-
-    os.chdir(MASTER_DIR)        # change to raw data folder
-
-    df.to_csv(fn, header=True)  # save csv to new data directory
+    for y in ELECT_YR:
+        filterCandsYear()
 
 
-# Committee Master (cnXX.txt)
-# 1. filter cols: TRES_NM, CMTE_ST1, CMTE_ST2, CMTE_CITY, CMTE_ST, CMTE_ZIP, CMTE_FILING_FREQ, CONNECTED_ORG_NM
+###### filterCandsYear
+
+def filterCandsYear(year):
+    head = HEADERS['cn']['head']       # read header file
+    keep = HEADERS['cn']['keep']       # set col names to keep
+
+    fn = CANDCOMM_FILES[year]['txt'][1]     # get candidate text file name
+    df = pd.read_table(RAW_DIR + fn, sep='|', header=None, names=head, index_col=0, usecols=keep)  # read csv into dataframe
+    df = df[df['CAND_PTY_AFFILIATION'].isin(INCLUDE_PTY)]   # filter rows on with included party affiliatons
+
+    df.to_csv(MASTER_DIR + fn, header=True)  # save csv to master data folder
+
+
+###### filterComms
+# 1. filter cols: TRES_NM, CMTE_ST1, CMTE_ST2, CMTE_CITY, CMTE_ST, CMTE_ZIP, CMTE_FILING_FREQ
 # 2. normalize cols: CMTE_DSGN, CMTE_TP, CMTE_PTY_AFFILIATION, ORG_TP
 # 3. filter rows (?): CMTE_ID = CAND_PCC from above
-def transformComms():
-    print 'Hello'
-    # read csv into dataframe
 
-    # create new dataframe with selected cols
+def filterComms():
+    head = HEADERS['cm']['head']       # read header file
+    keep = HEADERS['cm']['keep']       # set col names to keep
 
-    # filter rows to relevant candidates
+    for y in ELECT_YR:
+        fn = CANDCOMM_FILES[y]['txt'][0]    # get committee text file name
+        df = pd.read_table(RAW_DIR + fn, sep='|', header=None, names=head, index_col=0, usecols=keep)  # read csv into dataframe
+        # df = df[df['CAND_PTY_AFFILIATION'].isin(INCLUDE_PTY)]   # filter rows on with included party affiliatons
+
+        df.to_csv(MASTER_DIR + fn, header=True)  # save csv to master data folder
 
 
 
@@ -74,7 +80,7 @@ def transformComms():
 #   - standardize EMPLOYER string
 #   - group EMPLOYER into new col INDUSTRY
 
-def transformContribs():
+def filterContribs():
     print 'Hello'
     # read csv into dataframe
 
@@ -85,4 +91,8 @@ def transformContribs():
 
 
 if __name__ == '__main__':
-    transformCands()
+    filterCands()
+    # filterCandsYear('2016')
+    filterComms()
+    filterCommsYear('2016')
+

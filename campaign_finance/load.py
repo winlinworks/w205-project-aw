@@ -15,12 +15,7 @@ from googleapiclient import discovery
 from googleapiclient.http import MediaFileUpload
 from oauth2client.client import GoogleCredentials
 
-PROJECT_ID = 'w205-project-1272'
-DATASET_ID = 'test_data2'
-TABLE_ID = {'cm': ['cm12', 'cm14', 'cm16'],
-            'cn': ['cn12', 'cn14', 'cn16'],
-            'itcont': ['itcont12', 'itcont14', 'itcont16'],
-            'itpas2': ['itpas212', 'itpas214', 'itpas216']}
+from settings import *
 
 # [START make_post]
 def load_data(schema_path, data_path, project_id, dataset_id, table_id):
