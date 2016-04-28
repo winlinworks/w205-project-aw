@@ -1,4 +1,9 @@
 
+
+
+###### EXTRACT.PY
+
+
 ###### getHeaders - downloads file headers from ftp.fec.gov
 
 def getHeaders():
@@ -18,7 +23,7 @@ def getHeaders():
         os.unlink(fn)
 
 
-    ###### updateFiles - calls functions to download, unzip, and rename files for a given year
+###### updateFiles - calls functions to download, unzip, and rename files for a given year
 
 def updateFiles(year):
     getFiles(CANDCOMM_FILES, year)   # download candidate and committee files
@@ -33,3 +38,38 @@ def updateFiles(year):
             os.remove(fn)
 
             print('Removed: %s' % fn)
+
+
+
+
+
+###### TRANSFORM.PY
+
+
+"""
+
+format issues
+- date formate is mmddyyyy
+- zip codes and dates are being read and saved as floats?
+
+APPROACH
+
+Method 1: normalize/join data locally, then load to BQ
+- Use pandas for more intuitive workflow
+- Filter future data before loading to reduce size of loads
+- Can merge on 2 cols/indices
+
+Method 2: load all raw/denormalized data to BQ, then normalize/join data in BQ
+
+
+IMPLEMENTATION
+
+With dataframes df1, df2
+- Merge: pd.merge(df1, df2, on='field', how='left')
+- Join: df1.set_index('field', inplace=True); df1.join(df2)
+
+
+"""
+
+
+###### LOAD.PY

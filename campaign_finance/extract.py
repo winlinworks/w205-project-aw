@@ -12,26 +12,32 @@ from settings import *
 
 ###### initFiles - calls functions to download, unzip, and rename files for all years
 
-def initFiles():
-    print('Setting up Campaign Finance Explorer...')
+def updateFiles():
+    print('Welcome to Campaign Finance Explorer...\n')
 
     # unzip and rename raw files for each year
     for year in ELECT_YR:
+        print('Downloading candidate and committee files for %s...' % year)
+
         getFiles(CANDCOMM_FILES, year)      # download candidate and committee files
         unzipFiles(CANDCOMM_FILES, year)    # candidate and committee files
+
+        print('Downloading contribution and transfer files for %s...' % year)
 
         getFiles(CONTRIB_FILES, year)       # download contribution files    
         unzipFiles(CONTRIB_FILES, year)     # contribution files
 
-    # remove all zip files from raw data directory
+    # remove zip files from raw data directory
+    print('Cleaning up files...')
+
     for fn in os.listdir(RAW_DIR):
         if fn.endswith('zip'):
             os.remove(RAW_DIR + fn)
 
-            print('Removed: %s' % fn)
+            print('-- Removed: %s' % fn)
 
 
-##### getFiles - downloads candidate and committee files and file headers from FEC site
+###### getFiles - downloads candidate and committee files and file headers from FEC site
 
 def getFiles(file_dict, year):
     try:
@@ -47,7 +53,7 @@ def getFiles(file_dict, year):
             ftp.retrbinary('RETR ' + fn, f.write)
             f.close()
 
-            print('Download complete: %s' % fn)
+            print('-- Downloaded: %s' % fn)
 
     except ftplib.error_perm, e:
         print 'ERROR: cannot read file "%s"' % fn
@@ -67,18 +73,19 @@ def unzipFiles(file_dict, year):
         zf.extractall(RAW_DIR)
         zf.close()
 
-        print('Unzipped: %s' % fn)
+        print('-- Unzipped: %s' % fn)
 
     # append year to text files
     for fn in file_dict['temp']:
         newfile = fn[:-4] + year[2:] + '.txt'
         os.rename(RAW_DIR + fn, RAW_DIR + newfile)
 
-        print('Renamed: %s to %s') % (fn, newfile)
+        print('-- Renamed: %s -> %s') % (fn, newfile)
 
 
-###### MAIN
+
+###### main 
 
 if __name__ == '__main__':
-    initFiles()
+    updateFiles()
     
