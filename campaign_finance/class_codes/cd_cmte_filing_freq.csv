@@ -1,0 +1,7 @@
+CMTE_FILING_FREQ_CODE,CMTE_FILING_FREQ_DESC
+A,Administratively determined
+D,Debt
+M,Monthly filer
+Q,Quarterly filer
+T,Terminated
+W,Waived

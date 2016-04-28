@@ -3,19 +3,18 @@ import os
 
 import urllib
 import ftplib
-from ftplib import FTP
+from ftplib import *
 
 import zipfile
 
-from settings import *
+from config import *
 
 
-###### initFiles - calls functions to download, unzip, and rename files for all years
-
+# [START updateFiles]
 def updateFiles():
     print('Welcome to Campaign Finance Explorer...\n')
 
-    # unzip and rename raw files for each year
+    # for each election cycle, unzip and rename raw files
     for year in ELECT_YR:
         print('Downloading candidate and committee files for %s...' % year)
 
@@ -27,25 +26,26 @@ def updateFiles():
         getFiles(CONTRIB_FILES, year)       # download contribution files    
         unzipFiles(CONTRIB_FILES, year)     # contribution files
 
+    getHeaders()    # download file headers
+
     # remove zip files from raw data directory
-    print('Cleaning up files...')
+    print('Cleaning up folder...')
 
     for fn in os.listdir(RAW_DIR):
         if fn.endswith('zip'):
             os.remove(RAW_DIR + fn)
 
             print('-- Removed: %s' % fn)
+# [END updateFiles]
 
 
-###### getFiles - downloads candidate and committee files and file headers from FEC site
-
+# [START getFiles]
 def getFiles(file_dict, year):
     try:
-        ftp = FTP(HOST)           # connect to host fec.ftp.gov
+        ftp = FTP(FTP_HOST)             # connect to host: fec.ftp.gov
         ftp.login()
-
-        ftp.cwd('/FEC/' + year)      # move to FTP directory matching year
-        # ftp.retrlines('LIST')     # list files
+        ftp.cwd('/FEC/' + year)         # move to FTP directory matching year
+        # ftp.retrlines('LIST')         # list all files
 
         # download files
         for fn in file_dict[year]['zip']:
@@ -60,13 +60,38 @@ def getFiles(file_dict, year):
         os.unlink(fn)
 
     ftp.quit()
+# [END getFiles]
 
 
-###### unzipYear - unzips files to text files, renames them with year appended
+# [START getHeaders]
+def getHeaders():
+    try:
+        site_url = 'http://www.fec.gov/finance/disclosure/metadata/'
 
+        # download candidate and committee file headers
+        for fn in CANDCOMM_FILES['head']:
+            file_url =  site_url + fn
+            urllib.urlretrieve(file_url, RAW_DIR + fn)
+
+            print('-- Downloaded: %s' % fn)
+
+        # download contribution file headers
+        for fn in CONTRIB_FILES['head']:
+            file_url =  site_url + fn
+            urllib.urlretrieve(file_url, RAW_DIR + fn)
+
+            print('-- Downloaded: %s' % fn)
+
+    except urllib.error_perm, e:
+        print 'ERROR: cannot read file "%s"' % fn
+        os.unlink(fn)
+# [END getHeaders]
+
+
+# [START unzipYear]
 def unzipFiles(file_dict, year):
 
-    # unzip file for given year
+    # unzip files to text files
     for fn in file_dict[year]['zip']:
         f = open(RAW_DIR + fn, 'rb')
         zf = zipfile.ZipFile(f)
@@ -75,17 +100,15 @@ def unzipFiles(file_dict, year):
 
         print('-- Unzipped: %s' % fn)
 
-    # append year to text files
+    # rename text files with year appended
     for fn in file_dict['temp']:
         newfile = fn[:-4] + year[2:] + '.txt'
         os.rename(RAW_DIR + fn, RAW_DIR + newfile)
 
         print('-- Renamed: %s -> %s') % (fn, newfile)
+# [END unzipYear]
 
-
-
-###### main 
 
 if __name__ == '__main__':
     updateFiles()
-    
+
