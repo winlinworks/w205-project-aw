@@ -29,9 +29,9 @@ def filterCandidates(year):
     fn = CANDCOMM_FILES[year]['txt'][1]      # get file name
     df = pd.read_table(RAW_DIR + fn, sep='|', dtype=dt, header=None, names=head, index_col=0, usecols=cols)     # read csv into dataframe
 
-    df = df[df['CAND_PTY_AFFILIATION'].isin(INCLUDE_PTY)]   # filter included party affiliations
+    df = df[df['cand_pty_affiliation'].isin(INCLUDE_PTY)]   # filter included party affiliations
     fn = fn[:-4] + '.csv'       # change extension to csv
-    df.to_csv(MASTER_DIR + fn, header=True)         # save csv to master data folder
+    df.to_csv(MASTER_DIR + fn, header=None, na_rep='NA')         # save csv to master data folder
 
     print('-- Processed and saved: %s' % fn)
 # [END filterCands]
@@ -49,7 +49,7 @@ def filterCommittees(year):
     # *** no filter for committee classifications
 
     fn = fn[:-4] + '.csv'       # change extension to csv
-    df.to_csv(MASTER_DIR + fn, header=True)         # save csv to master data folder
+    df.to_csv(MASTER_DIR + fn, header=None, na_rep='NA')         # save csv to master data folder
 
     print('-- Processed and saved: %s' % fn)
 # [END filterComms]
@@ -62,11 +62,11 @@ def filterIndivContribs(year):
     dt = SCHEMA_INCLUDE['indiv_contribs']               # data types
 
     fn = CONTRIB_FILES[year]['txt'][0]      # get file name
-    df = pd.read_table(RAW_DIR + fn, sep='|', dtype=dt, header=None, names=head, index_col=0, usecols=cols)     # read csv into dataframe
+    df = pd.read_table(RAW_DIR + fn, sep='|', dtype=dt, header=None, names=head, index_col=15, usecols=cols)     # read csv into dataframe
     
-    df = df[df['TRANSACTION_TP'].isin(INCLUDE_TRANS)]   # filter transaction types
+    df = df[df['transaction_tp'].isin(INCLUDE_TRANS)]   # filter transaction types
     fn = fn[:-4] + '.csv'       # change extension to csv
-    df.to_csv(MASTER_DIR + fn, header=True)             # save csv to master data folder
+    df.to_csv(MASTER_DIR + fn, header=None, na_rep='NA')             # save csv to master data folder
 
     print('-- Processed and saved: %s' % fn)
 # [END filterIndivCons]
@@ -79,11 +79,11 @@ def filterCommContribs(year):
     dt = SCHEMA_INCLUDE['comm_contribs']                # data types
 
     fn = CONTRIB_FILES[year]['txt'][1]      # get file name
-    df = pd.read_table(RAW_DIR + fn, sep='|', dtype=dt, header=None, names=head, index_col=0, usecols=cols)     # read csv into dataframe
+    df = pd.read_table(RAW_DIR + fn, sep='|', dtype=dt, header=None, names=head, index_col=14, usecols=cols)     # read csv into dataframe
     
-    df = df[df['TRANSACTION_TP'].isin(INCLUDE_TRANS)]   # filter transaction types
+    df = df[df['transaction_tp'].isin(INCLUDE_TRANS)]   # filter transaction types
     fn = fn[:-4] + '.csv'       # change extension to csv
-    df.to_csv(MASTER_DIR + fn, header=True)             # save csv to master data folder
+    df.to_csv(MASTER_DIR + fn, header=None, na_rep='NA')             # save csv to master data folder
 
     print('-- Processed and saved: %s' % fn)
 # [END filterCommCons]

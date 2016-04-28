@@ -38,16 +38,18 @@ Solution: tool to perform exploratory data analysis of campaign contributions an
 
 3.1. Environment
     - EC2 instance: public DNS
-    - BigQuery project: public URL
+    - BigQuery project:
+        https://bigquery.cloud.google.com/welcome/campaign-finance-1295
 
 3.2. Directory Structure
 
 /campaign_finance
     campaign_finance.py
+    config.py
     extract.py
     transform.py
     load.py
-    settings.py
+    
     /data_master
 
     /data_raw

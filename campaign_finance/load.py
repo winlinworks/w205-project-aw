@@ -17,6 +17,8 @@ from oauth2client.client import GoogleCredentials
 
 from config import *
 
+
+
 # [START make_post]
 def load_data(schema_path, data_path, project_id, dataset_id, table_id):
     """Loads the given data file into BigQuery.
@@ -57,6 +59,7 @@ def load_data(schema_path, data_path, project_id, dataset_id, table_id):
                         'tableId': table_id
                     },
                     'sourceFormat': source_format,
+                    'createDisposition': 'CREATE_IF_NEEDED'
                 }
             }
         },
@@ -73,7 +76,7 @@ def load_data(schema_path, data_path, project_id, dataset_id, table_id):
 
     # Poll the job until it finishes.
     while True:
-        result = status_request.execute(num_retries=2)
+        result = status_request.execute(num_retries=10)
 
         if result['status']['state'] == 'DONE':
             if result['status'].get('errors'):
@@ -96,26 +99,42 @@ def main(project_id, dataset_id, table_name, schema_path, data_path):
         table_name)
 # [END main]
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('project_id', help='Your Google Cloud project ID.')
-    parser.add_argument('dataset_id', help='A BigQuery dataset ID.')
-    parser.add_argument(
-        'table_name', help='Name of the table to load data into.')
-    parser.add_argument(
-        'schema_file',
-        help='Path to a schema file describing the table schema.')
-    parser.add_argument(
-        'data_file',
-        help='Path to the data file.')
 
-    args = parser.parse_args()
+if __name__ == '__main__':
+    project_id = 'campaign-finance-1295'
+    dataset_id = 'test1'
+    table_name = 'candidates'
+    schema_file = MASTER_DIR + 'schema_candidates.json'
+    data_file = MASTER_DIR + 'cn16.csv'
+
+    # print json.load(open(schema_file, 'r'))
 
     main(
-        args.project_id,
-        args.dataset_id,
-        args.table_name,
-        args.schema_file,
-        args.data_file)
+        project_id,
+        dataset_id,
+        table_name,
+        schema_file,
+        data_file)
+
+    # parser = argparse.ArgumentParser(
+    #     description=__doc__,
+    #     formatter_class=argparse.RawDescriptionHelpFormatter)
+    # parser.add_argument('project_id', help='Your Google Cloud project ID.')
+    # parser.add_argument('dataset_id', help='A BigQuery dataset ID.')
+    # parser.add_argument(
+    #     'table_name', help='Name of the table to load data into.')
+    # parser.add_argument(
+    #     'schema_file',
+    #     help='Path to a schema file describing the table schema.')
+    # parser.add_argument(
+    #     'data_file',
+    #     help='Path to the data file.')
+
+    # args = parser.parse_args()
+
+    # main(
+    #     args.project_id,
+    #     args.dataset_id,
+    #     args.table_name,
+    #     args.schema_file,
+    #     args.data_file)
