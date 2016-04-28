@@ -1,9 +1,9 @@
-import sys
-import os
+import sys, os
 import zipfile
 import urllib
 import ftplib
 from ftplib import *
+
 from config import *
 
 

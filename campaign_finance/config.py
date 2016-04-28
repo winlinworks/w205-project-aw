@@ -25,6 +25,10 @@ TABLE_ID = {
     'comm_contribs': ['itpas212', 'itpas214', 'itpas216'],
     'comm_transfers': ['itpas212', 'itpas214', 'itpas216']
 }
+
+SCHEMA_FILES = {
+    'committees': 'schema_comm.'
+}
 # [END BigQuery config info]
 
 

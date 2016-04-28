@@ -1,4 +1,4 @@
-su"""Command-line application that loads data into BigQuery via HTTP POST.
+"""Command-line application that loads data into BigQuery via HTTP POST.
 
 This sample is used on this page:
 
@@ -15,7 +15,7 @@ from googleapiclient import discovery
 from googleapiclient.http import MediaFileUpload
 from oauth2client.client import GoogleCredentials
 
-from settings import *
+from config import *
 
 # [START make_post]
 def load_data(schema_path, data_path, project_id, dataset_id, table_id):
