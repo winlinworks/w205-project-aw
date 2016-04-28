@@ -1,11 +1,6 @@
 import sys
 import os
 import pandas as pd
-
-from googleapiclient.discovery import build
-from googleapiclient.errors import HttpError
-from oauth2client.client import GoogleCredentials
-
 from config import *
 
 
@@ -13,8 +8,12 @@ from config import *
 def filterAll():
     # for each election cycle
     for year in ELECT_YR:
+        print('Filtering candidate and committee files for %s...' % year)
+
         filterCandidates(year)      # filter candidates
         filterCommittees(year)      # filter committees
+
+        print('Filtering contribution and transfer files for %s...' % year)
 
         filterIndivContribs(year)   # filter individual contributions to candidates
         filterCommContribs(year)    # filter committee contributions to candidates
@@ -32,6 +31,8 @@ def filterCandidates(year):
 
     df = df[df['CAND_PTY_AFFILIATION'].isin(INCLUDE_PTY)]   # filter included party affiliations
     df.to_csv(MASTER_DIR + fn, header=True)         # save csv to master data folder
+
+    print('-- Filtered and saved: %s' % fn)
 # [END filterCands]
 
 
@@ -47,6 +48,8 @@ def filterCommittees(year):
     # *** no filter for committee classifications
     
     df.to_csv(MASTER_DIR + fn, header=True)         # save csv to master data folder
+
+    print('-- Filtered and saved: %s' % fn)
 # [END filterComms]
 
 
@@ -61,6 +64,8 @@ def filterIndivContribs(year):
     
     df = df[df['TRANSACTION_TP'].isin(INCLUDE_TRANS)]   # filter transaction types
     df.to_csv(MASTER_DIR + fn, header=True)             # save csv to master data folder
+
+    print('-- Filtered and saved: %s' % fn)
 # [END filterIndivCons]
 
 
@@ -75,6 +80,8 @@ def filterCommContribs(year):
     
     df = df[df['TRANSACTION_TP'].isin(INCLUDE_TRANS)]   # filter transaction types
     df.to_csv(MASTER_DIR + fn, header=True)             # save csv to master data folder
+
+    print('-- Filtered and saved: %s' % fn)
 # [END filterCommCons]
 
 

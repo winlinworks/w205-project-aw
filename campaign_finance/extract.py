@@ -1,12 +1,9 @@
 import sys
 import os
-
+import zipfile
 import urllib
 import ftplib
 from ftplib import *
-
-import zipfile
-
 from config import *
 
 
