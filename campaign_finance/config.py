@@ -29,13 +29,18 @@ STORE_ID = 'test205'
 #     'comm_transfers': ['itpas212', 'itpas214', 'itpas216']
 # }
 
-SCHEMA_FILES = {
-    'committees': 'schema_comm.'
-}
 
 
 # election cycles
-ELECT_YR = ['2012', '2014', '2016']
+ELECTION_YEARS = ['2012', '2014', '2016']
+
+FILE_TYPES = {
+    'cm': 'cm',
+    'cn': 'cn',
+    'indiv': 'itcont',
+    'pas2': 'itpas2',
+    'oth': 'itoth'
+}
 
 # political parties to include: Democrats, Republicans, Independents
 INCLUDE_PTY = ['DEM', 'REP', 'IND']     
@@ -57,57 +62,8 @@ INCLUDE_TRANS = [
 ]
 
 
-# dict for candidate and committee file names
-# updated daily
-CANDCOMM_FILES = {
-    # header files
-    'head': ['cm_header_file.csv', 'cn_header_file.csv'],
-
-    # unzipped txt files
-    'temp': ['cm.txt', 'cn.txt'],
-
-    # zip files and renamed txt files
-    '2016': {
-        'zip': ['cm16.zip', 'cn16.zip'],
-        'txt': ['cm16.txt', 'cn16.txt']
-    },
-    '2014': {
-        'zip': ['cm14.zip', 'cn14.zip'],
-        'txt': ['cm14.txt', 'cn14.txt']
-    },
-    '2012': {
-        'zip': ['cm12.zip', 'cn12.zip'],
-        'txt': ['cm12.txt', 'cn12.txt']
-    }
-}
-
-# dict for contribution file names
-# updated weekly -> handle separately from candidate/committeee files
-CONTRIB_FILES = {
-    # header files
-    'head': ['indiv_header_file.csv', 'pas2_header_file.csv', 'oth_header_file.csv'],
-    
-    # unzipped txt files
-    'temp': ['itcont.txt', 'itpas2.txt', 'itoth.txt'],
-
-    # zip files and renamed txt files by election cycle
-    '2016': {
-        'zip': ['indiv16.zip', 'pas216.zip', 'oth16.zip'],
-        'txt': ['itcont16.txt', 'itpas216.txt', 'itoth16.txt']
-    },
-    '2014': {
-        'zip': ['indiv14.zip', 'pas214.zip', 'oth14.zip'],
-        'txt': ['itcont14.txt', 'itpas214.txt', 'itoth14.txt']
-    },
-    '2012': {
-        'zip': ['indiv12.zip', 'pas212.zip', 'oth12.zip'],
-        'txt': ['itcont12.txt', 'itpas212.txt', 'itoth12.txt']
-    }
-}
-
-
 # schema for raw data
-SCHEMA_ALL = {
+SCHEMA_RAW = {
     'cn': OrderedDict((
         ('cand_id', str),
         ('cand_name', str),
@@ -216,7 +172,7 @@ SCHEMA_ALL = {
 
 
 # schema for transformed data
-SCHEMA_INCLUDE = {
+SCHEMA_NEW = {
     'cn': OrderedDict((
         ('cand_id', str),
         ('cand_name', str),

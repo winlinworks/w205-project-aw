@@ -24,6 +24,30 @@ CLASS_CODES = {
 
 
 
+# [START get_headers]
+def get_headers():
+    try:
+        site_url = 'http://www.fec.gov/finance/disclosure/metadata/'
+
+        # download candidate and committee file headers
+        for file_name in CANDCOMM_FILES['head']:
+            file_url =  site_url + file_name
+            urllib.urlretrieve(file_url, RAW_DIR + file_name)
+
+            print('-- Downloaded: %s' % file_name)
+
+        # download contribution file headers
+        for file_name in CONTRIB_FILES['head']:
+            file_url =  site_url + file_name
+            urllib.urlretrieve(file_url, RAW_DIR + file_name)
+
+            print('-- Downloaded: %s' % file_name)
+
+    except urllib.error_perm, e:
+        print 'ERROR: cannot read file "%s"' % file_name
+        os.unlink(file_name)
+# [END get_headers]
+
 
 
 # TRANSFORM.PY

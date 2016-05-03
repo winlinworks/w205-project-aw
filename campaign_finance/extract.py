@@ -7,37 +7,9 @@ from ftplib import *
 from config import *
 
 
-# [START updateFiles]
-def updateFiles():
-    print('Welcome to Campaign Finance Explorer...\n')
+# [START get_file]
+def get_file(zip_type, year):
 
-    # for each election cycle, unzip and rename raw files
-    for year in ELECT_YR:
-        print('Downloading candidate and committee files for %s...' % year)
-
-        getFiles(CANDCOMM_FILES, year)      # download candidate and committee files
-        unzipFiles(CANDCOMM_FILES, year)    # candidate and committee files
-
-        print('Downloading contribution and transfer files for %s...' % year)
-
-        getFiles(CONTRIB_FILES, year)       # download contribution files    
-        unzipFiles(CONTRIB_FILES, year)     # contribution files
-
-    getHeaders()    # download file headers
-
-    # remove zip files from raw data directory
-    print('Cleaning up folder...')
-
-    for fn in os.listdir(RAW_DIR):
-        if fn.endswith('zip'):
-            os.remove(RAW_DIR + fn)
-
-            print('-- Removed: %s' % fn)
-# [END updateFiles]
-
-
-# [START getFiles]
-def getFiles(file_dict, year):
     try:
         ftp = FTP(FTP_HOST)             # connect to host: fec.ftp.gov
         ftp.login()
@@ -45,67 +17,71 @@ def getFiles(file_dict, year):
         # ftp.retrlines('LIST')         # list all files
 
         # download files
-        for fn in file_dict[year]['zip']:
-            f = open(RAW_DIR + fn, 'wb')
-            ftp.retrbinary('RETR ' + fn, f.write)
-            f.close()
+        file = zip_type + year[2:] + '.zip'
+        f = open(RAW_DIR + file, 'wb')
+        ftp.retrbinary('RETR ' + file, f.write)
+        f.close()
 
-            print('-- Downloaded: %s' % fn)
+        print('-- Downloaded: %s' % file)
 
     except ftplib.error_perm, e:
-        print 'ERROR: cannot read file "%s"' % fn
-        os.unlink(fn)
+        print 'ERROR: cannot read file "%s"' % file
+        os.unlink(RAW_DIR + file)
 
     ftp.quit()
-# [END getFiles]
+# [END get_file]
 
 
-# [START getHeaders]
-def getHeaders():
-    try:
-        site_url = 'http://www.fec.gov/finance/disclosure/metadata/'
 
-        # download candidate and committee file headers
-        for fn in CANDCOMM_FILES['head']:
-            file_url =  site_url + fn
-            urllib.urlretrieve(file_url, RAW_DIR + fn)
-
-            print('-- Downloaded: %s' % fn)
-
-        # download contribution file headers
-        for fn in CONTRIB_FILES['head']:
-            file_url =  site_url + fn
-            urllib.urlretrieve(file_url, RAW_DIR + fn)
-
-            print('-- Downloaded: %s' % fn)
-
-    except urllib.error_perm, e:
-        print 'ERROR: cannot read file "%s"' % fn
-        os.unlink(fn)
-# [END getHeaders]
-
-
-# [START unzipYear]
-def unzipFiles(file_dict, year):
+# [START unzip_file]
+def unzip_file(zip_type, txt_type, year):
 
     # unzip files to text files
-    for fn in file_dict[year]['zip']:
-        f = open(RAW_DIR + fn, 'rb')
-        zf = zipfile.ZipFile(f)
-        zf.extractall(RAW_DIR)
-        zf.close()
+    file = zip_type + year[2:] + '.zip'
+    f = open(RAW_DIR + file, 'rb')
+    zf = zipfile.ZipFile(f)
+    zf.extractall(RAW_DIR)
+    zf.close()
 
-        print('-- Unzipped: %s' % fn)
+    print('-- Unzipped: %s' % file)
 
     # rename text files with year appended
-    for fn in file_dict['temp']:
-        newfile = fn[:-4] + year[2:] + '.txt'
-        os.rename(RAW_DIR + fn, RAW_DIR + newfile)
+    # must do before unzipping files for other years
+    oldfile = txt_type + '.txt'
+    newfile = txt_type + year[2:] + '.txt'
+    os.rename(RAW_DIR + oldfile, RAW_DIR + newfile)
 
-        print('-- Renamed: %s -> %s') % (fn, newfile)
-# [END unzipYear]
+    print('-- Renamed: %s -> %s') % (oldfile, newfile)
+# [END unzip_file]
+
+
+# [START extract_all]
+def extract_all():
+
+    print('Welcome to Campaign Finance Explorer...\n')
+
+    # for each election cycle, unzip and rename raw files
+    for year in ELECTION_YEARS:
+        print('Downloading candidate, committee, and contribution/transfer files for %s...' % year)
+
+        for zip_type, txt_type in FILE_TYPES.items():
+            get_file(zip_type, year)       # download file
+            unzip_file(zip_type, txt_type, year)    # unzip file
+
+    # remove zip files from raw data directory
+    print('Cleaning up folder...')
+
+    for file in os.listdir(RAW_DIR):
+        if file.endswith('zip'):
+            os.remove(RAW_DIR + file)
+
+            print('-- Removed: %s' % file)
+# [END extract]
 
 
 if __name__ == '__main__':
-    updateFiles()
+
+    extract_all()
+    # extract_cand_comm()
+    # extract_contrib_trans()
 

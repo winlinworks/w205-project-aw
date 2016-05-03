@@ -88,17 +88,29 @@ def load_data(project_id, dataset_id, table_id, schema_file, data_file):
 # [END make_post]
 
 
-# [START loadAll]
-def loadAll():
-    table_id = 'itpas216'
-    schema_file = MASTER_DIR + 'schema_itpas2.json'
-    data_file = MASTER_DIR + 'itpas216.csv'
+# [START load]
+def load_all():
 
-    load_data(PROJ_ID, DATA_ID, table_id, schema_file, data_file)
-# [END loadAll]
+    # for each election cycle
+    for year in ELECTION_YEARS:
+        print('Loading candidate and committee data for %s...' % year)
+
+        # load each file type
+        for zip_type, txt_type in FILE_TYPES.items():
+
+            table_id = txt_type + year[2:]
+            schema_file = 'scm_%s.json' % txt_type
+            data_file = txt_type + year[2:] + '.csv'
+
+            load_data(PROJ_ID, DATA_ID, table_id, MASTER_DIR + schema_file, MASTER_DIR + data_file)
+
+            print('Loaded: %s into %s.%s' % (data_file, DATA_ID, table_id))
+# [END load]
 
 
 if __name__ == '__main__':
 
-    loadAll()
+    load_all()
+    # load_cands()
+    # load_contrib_trans()
 
