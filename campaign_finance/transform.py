@@ -4,22 +4,6 @@ import pandas as pd
 from config import *
 
 
-# [START filterAll]
-def filterAll():
-    # for each election cycle
-    for year in ELECT_YR:
-        print('Filtering candidate and committee data for %s...' % year)
-
-        filterCandidates(year)      # filter candidates
-        filterCommittees(year)      # filter committees
-
-        print('Filtering contribution and transfer data for %s...' % year)
-
-        filterIndivContribs(year)   # filter individual contributions to candidates
-        filterCommContribs(year)    # filter committee contributions to candidates
-# [END filterAll]
-
-
 # [START filterCands]
 def filterCandidates(year):
     head = SCHEMA_ALL['candidates']                 # header to read csv
@@ -66,7 +50,7 @@ def filterIndivContribs(year):
     
     df = df[df['transaction_tp'].isin(INCLUDE_TRANS)]   # filter transaction types
     fn = fn[:-4] + '.csv'       # change extension to csv
-    df.to_csv(MASTER_DIR + fn, header=None, na_rep='NA')             # save csv to master data folder
+    df.to_csv(MASTER_DIR + fn, header=None, na_rep=0)             # save csv to master data folder
 
     print('-- Processed and saved: %s' % fn)
 # [END filterIndivCons]
@@ -89,6 +73,22 @@ def filterCommContribs(year):
 # [END filterCommCons]
 
 
+# [START filterAll]
+def filterAll():
+    # for each election cycle
+    for year in ELECT_YR:
+        print('Filtering candidate and committee data for %s...' % year)
+
+        filterCandidates(year)      # filter candidates
+        filterCommittees(year)      # filter committees
+
+        print('Filtering contribution and transfer data for %s...' % year)
+
+        filterIndivContribs(year)   # filter individual contributions to candidates
+        filterCommContribs(year)    # filter committee contributions to candidates
+# [END filterAll]
+
 if __name__ == '__main__':
+
     filterAll()
 

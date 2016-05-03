@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "campaign-finance-1295",
+  "private_key_id": "66f8b9250b6e0d8632feb5f1e06e83940b85f044",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQChDGovuimmZoK8\nGa7pz9t/XT+X5BIjqS/o+CZH2eBc8Td9WdEHi+MVlb1n3rozYH9v9wo0/HrSMit2\n2qgZUd1GyVhiWMAIkyMUUvc77BJgvHgdAqaJFsrnW0Uhpzi0ENpyfEiR/AUqtGAc\n4sHGHlypOTWJObBJPKJJvpZ7yGmKCujgPrAfk5baAIa1/kIZ8AzPAHI8AYlwPo4k\nJCKbTlD0ggkB6zbF/icfHNmUFa2gkgD+7/yzKYXRLRqlY4sadZHhJTHOTh3syXgR\n1FHGqC1J0Gd8m3zO/fMQtbIbueanOw2sALcKMjKDlHQKhV1oIY4dFXr+FZZjkAcx\noH7sLpPjAgMBAAECggEBAI4ayke62K1/nrQjZXfidSf5O/fmwyq8Sw4iiIS194eL\nQQ9WhV9HS+Tr7+kLWvmimFBPh64haq62niuN3O4akkm3uElvTmNCkZ2JZ6Z0M/Mv\n2jye7hvhBMEIhAOh7iLVDCwhBlfqLRT1fCmA3MLYX6LiXB7tzGOTIRA5H8exm461\nkhsA+BHs1QOkWfULlLALA9uswtvTlCuImvPALIAgdWQP9NFpGbCeVFmilQQUkOKs\n0Q4izI9GcIx7f+c+cfgG4s6q6Ao3XgZ+cAVTGw+FBdke+rzNJ4L/SwD3xkTvjsQB\nVXi3CyGFI2zI4/Vild45cVizBqy6hOI+xXCUyA9rnEECgYEA3LG0gstV90+t52AJ\nTE8r50GETrCUnqPlJvlOlAPtORpSuo0BIIMOCHgeqGbjLpuH4TTDjdLONmcYDKHZ\nfpkkU4pVDjFMiULO9DP/g1UtPuNNf5ycXqaz+Yy3ILv2Zv7wa4dQh8v60satbngG\n9/lxHZdFCqJL6CFuIayr7F5qGqkCgYEAus/8HMb7hm3BE2vRrcJEkDG0B+HzvlaS\nba6i6XK4WZS2Kg+03JR2zNNEUgxFi5z7TdWYfb3d1Zcc2CuZ8eo7SohnmUIY+LRD\nwrrYQflr9lLw0Wen1dIg7+YwXYFPx79Po1snn6GXNCshoYOE/J30PoG42uOZuJ0r\nTPz8ZXygvasCgYAQ9WbVliJo+qp2WR7dykepYZN1KISDHD0Dnay4GwUjmi45P5SS\nlv+BDxnr/tv+PN1YJOHSCBzoeUuTzOwVmlb8RGj8yjUDZyrYARblVKpBZt4RrEsn\nys+RoYqA7XClwXlgCenaRYZko/e3wWlnrLdQestHYelLUSZRWB9t7mNg4QKBgC9N\nDlbzAyjsjWCvgi3u7JFeJGmCisb9AKKI/3MAuzDjeKR5yZ+4b8Q5Eil8Nfe9zdvN\nY4kjFBJK6uDJWXdpiY27sA+cLtp6OlYKHUvHLdD2+0bqahK32+Mic8iZP2wiQrXo\nFMZUkgaBjUhqFrgn/nn9OqMh0gBuu1IJFJdV0RV1AoGAOlv17c0iE0xJx6fXTusC\nvU1H10ECWJwyuPLG78g+nD/3ho0jw6d//8YdaN5ueRulOXz2yWX5pGembEHQC/zE\nAzDEnfbEwcTACEsqSt88kxRSxM4zyEXEUZelL3Ega4X9QZqngklUSMRQ0aWpEdg9\n7IevVeokQifVH6xHPLW5yng=\n-----END PRIVATE KEY-----\n",
+  "client_email": "w205-final@campaign-finance-1295.iam.gserviceaccount.com",
+  "client_id": "110485920229560283691",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/w205-final%40campaign-finance-1295.iam.gserviceaccount.com"
+}

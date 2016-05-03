@@ -18,9 +18,8 @@ from oauth2client.client import GoogleCredentials
 from config import *
 
 
-
 # [START make_post]
-def load_data(schema_path, data_path, project_id, dataset_id, table_id):
+def load_data(project_id, dataset_id, table_id, schema_file, data_file):
     """Loads the given data file into BigQuery.
 
     Args:
@@ -38,7 +37,7 @@ def load_data(schema_path, data_path, project_id, dataset_id, table_id):
 
     # Infer the data format from the name of the data file.
     source_format = 'CSV'
-    if data_path[-5:].lower() == '.json':
+    if data_file[-5:].lower() == '.json':
         source_format = 'NEWLINE_DELIMITED_JSON'
 
     # Post to the jobs resource using the client's media upload interface. See:
@@ -51,7 +50,7 @@ def load_data(schema_path, data_path, project_id, dataset_id, table_id):
             'configuration': {
                 'load': {
                     'schema': {
-                        'fields': json.load(open(schema_path, 'r'))
+                        'fields': json.load(open(schema_file, 'r'))
                     },
                     'destinationTable': {
                         'projectId': project_id,
@@ -64,7 +63,7 @@ def load_data(schema_path, data_path, project_id, dataset_id, table_id):
             }
         },
         media_body=MediaFileUpload(
-            data_path,
+            data_file,
             mimetype='application/octet-stream'))
     job = insert_request.execute()
 
@@ -89,52 +88,17 @@ def load_data(schema_path, data_path, project_id, dataset_id, table_id):
 # [END make_post]
 
 
-# [START main]
-def main(project_id, dataset_id, table_name, schema_path, data_path):
-    load_data(
-        schema_path,
-        data_path,
-        project_id,
-        dataset_id,
-        table_name)
-# [END main]
+# [START loadAll]
+def loadAll():
+    table_id = 'itpas216'
+    schema_file = MASTER_DIR + 'schema_itpas2.json'
+    data_file = MASTER_DIR + 'itpas216.csv'
+
+    load_data(PROJ_ID, DATA_ID, table_id, schema_file, data_file)
+# [END loadAll]
 
 
 if __name__ == '__main__':
-    project_id = 'campaign-finance-1295'
-    dataset_id = 'test1'
-    table_name = 'candidates'
-    schema_file = MASTER_DIR + 'schema_candidates.json'
-    data_file = MASTER_DIR + 'cn16.csv'
 
-    # print json.load(open(schema_file, 'r'))
+    loadAll()
 
-    main(
-        project_id,
-        dataset_id,
-        table_name,
-        schema_file,
-        data_file)
-
-    # parser = argparse.ArgumentParser(
-    #     description=__doc__,
-    #     formatter_class=argparse.RawDescriptionHelpFormatter)
-    # parser.add_argument('project_id', help='Your Google Cloud project ID.')
-    # parser.add_argument('dataset_id', help='A BigQuery dataset ID.')
-    # parser.add_argument(
-    #     'table_name', help='Name of the table to load data into.')
-    # parser.add_argument(
-    #     'schema_file',
-    #     help='Path to a schema file describing the table schema.')
-    # parser.add_argument(
-    #     'data_file',
-    #     help='Path to the data file.')
-
-    # args = parser.parse_args()
-
-    # main(
-    #     args.project_id,
-    #     args.dataset_id,
-    #     args.table_name,
-    #     args.schema_file,
-    #     args.data_file)

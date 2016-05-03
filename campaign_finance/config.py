@@ -12,27 +12,27 @@ MASTER_DIR = MAIN_DIR + '/data_master/' # directory for transformed master data 
 FTP_HOST = 'ftp.fec.gov'
 
 
-# [START BigQuery config info]
+# BigQuery config info
 
-PROJECT_ID = 'w205-project-1272'
+PROJ_ID = 'campaign-finance-1295'
+# DATA_ID = 'demo205'
+# STORE_ID = 'demo205'
 
-DATASET_ID = 'test_data'
+DATA_ID = 'test205'
+STORE_ID = 'test205'
 
-TABLE_ID = {
-    'committees': ['cm12', 'cm14', 'cm16'],
-    'candidates': ['cn12', 'cn14', 'cn16'],
-    'indiv_contribs': ['itcont12', 'itcont14', 'itcont16'],
-    'comm_contribs': ['itpas212', 'itpas214', 'itpas216'],
-    'comm_transfers': ['itpas212', 'itpas214', 'itpas216']
-}
+# TABLE_ID = {
+#     'committees': ['cm12', 'cm14', 'cm16'],
+#     'candidates': ['cn12', 'cn14', 'cn16'],
+#     'indiv_contribs': ['itcont12', 'itcont14', 'itcont16'],
+#     'comm_contribs': ['itpas212', 'itpas214', 'itpas216'],
+#     'comm_transfers': ['itpas212', 'itpas214', 'itpas216']
+# }
 
 SCHEMA_FILES = {
     'committees': 'schema_comm.'
 }
-# [END BigQuery config info]
 
-
-# [START globals]
 
 # election cycles
 ELECT_YR = ['2012', '2014', '2016']
@@ -55,10 +55,7 @@ INCLUDE_TRANS = [
     '31', '31T', '31K', '31G',          # Headquarters Account receipts
     '32', '32T', '32K', '32G',          # Recount Account receipts
 ]
-# [END globals]
 
-
-# [START file metadata]
 
 # dict for candidate and committee file names
 # updated daily
@@ -108,100 +105,17 @@ CONTRIB_FILES = {
     }
 }
 
-# schema with columns to include
-SCHEMA_INCLUDE = {
-    'candidates': OrderedDict((
-        ('cand_id', str),
-        ('cand_name', str),
-        ('cand_pty_affiliation', str),
-        ('cand_election_yr', int),
-        ('cand_office_st', str),
-        ('cand_office', str),
-        ('cand_office_district', str),
-        ('cand_ici', str),
-        ('cand_status', str),
-        ('cand_pcc', str)
-    )),
-    'committees': OrderedDict((
-        ('cmte_id', str),
-        ('cmte_nm', str),
-        ('cmte_dsgn', str),
-        ('cmte_tp', str),
-        ('cmte_pty_affiliation', str),
-        ('org_tp', str),
-        ('connected_org_nm', str),
-        ('cand_id', str)
-    )),
-    'indiv_contribs': OrderedDict((
-        ('cmte_id', str),
-        ('amndt_ind', str),
-        ('rpt_tp', str),
-        ('transaction_pgi', str),
-        ('transaction_tp', str),
-        ('entity_tp', str),
-        ('name', str),
-        ('city', str),
-        ('state', str),
-        ('zip_code', str),
-        ('employer', str),
-        ('occupation', str),
-        ('transaction_dt', str),
-        ('transaction_amt', int),
-        ('other_id', str),
-        ('tran_id', str),
-        ('memo_cd', str)
-    )),
-    'comm_contribs': OrderedDict((
-        ('cmte_id', str),
-        ('amndt_ind', str),
-        ('rpt_tp', str),
-        ('transaction_pgi', str),
-        ('transaction_tp', str),
-        ('entity_tp', str),
-        ('name', str),
-        ('city', str),
-        ('state', str),
-        ('zip_code', str),
-        ('employer', str),
-        ('occupation', str),
-        ('transaction_dt', str),
-        ('transaction_amt', int),
-        ('other_id', str),
-        ('cand_id', str),
-        ('tran_id', str),
-        ('memo_cd', str)
-    )),
-    'comm_transfers': OrderedDict((
-        ('cmte_id', str),
-        ('amndt_ind', str),
-        ('rpt_tp', str),
-        ('transaction_pgi', str),
-        ('transaction_tp', str),
-        ('entity_tp', str),
-        ('name', str),
-        ('city', str),
-        ('state', str),
-        ('zip_code', str),
-        ('employer', str),
-        ('occupation', str),
-        ('transaction_dt', str),
-        ('transaction_amt', int),
-        ('other_id', str),
-        ('tran_id', str),
-        ('memo_cd', str)
-    ))
-}
 
-# schema with all columns from raw data
+# schema for raw data
 SCHEMA_ALL = {
-    'candidates': OrderedDict((
+    'cn': OrderedDict((
         ('cand_id', str),
         ('cand_name', str),
         ('cand_pty_affiliation', str),
         ('cand_election_yr', str),
         ('cand_office_st', str),
         ('cand_office', str),
-        ('cand_office_distr)ict', str),
+        ('cand_office_district', str),
         ('cand_ici', str),
         ('cand_status', str),
         ('cand_pcc', str),
@@ -211,7 +125,7 @@ SCHEMA_ALL = {
         ('cand_st', str),
         ('cand_zip', str)
     )),
-    'committees': OrderedDict((
+    'cm': OrderedDict((
         ('cmte_id', str),
         ('cmte_nm', str),
         ('tres_nm', str),
@@ -228,7 +142,7 @@ SCHEMA_ALL = {
         ('connected_org_nm', str),
         ('cand_id', str)
     )),
-    'indiv_contribs': OrderedDict((
+    'itcont': OrderedDict((
         ('cmte_id', str),
         ('amndt_ind', str),
         ('rpt_tp', str),
@@ -251,7 +165,7 @@ SCHEMA_ALL = {
         ('memo_text', str),
         ('sub_id', str)
     )),
-    'comm_contribs': OrderedDict((
+    'itpas2': OrderedDict((
         ('cmte_id', str),
         ('amndt_ind', str),
         ('rpt_tp', str),
@@ -275,7 +189,7 @@ SCHEMA_ALL = {
         ('memo_text', str),
         ('sub_id', str)
     )),
-    'comm_transfers': OrderedDict((
+    'itoth': OrderedDict((
         ('cmte_id', str),
         ('amndt_ind', str),
         ('rpt_tp', str),
@@ -299,8 +213,91 @@ SCHEMA_ALL = {
         ('sub_id', str)
     ))
 }
-# [END file metadata]
 
+
+# schema for transformed data
+SCHEMA_INCLUDE = {
+    'cn': OrderedDict((
+        ('cand_id', str),
+        ('cand_name', str),
+        ('cand_pty_affiliation', str),
+        ('cand_election_yr', int),
+        ('cand_office_st', str),
+        ('cand_office', str),
+        ('cand_office_district', str),
+        ('cand_ici', str),
+        ('cand_status', str),
+        ('cand_pcc', str)
+    )),
+    'cm': OrderedDict((
+        ('cmte_id', str),
+        ('cmte_nm', str),
+        ('cmte_dsgn', str),
+        ('cmte_tp', str),
+        ('cmte_pty_affiliation', str),
+        ('org_tp', str),
+        ('connected_org_nm', str),
+        ('cand_id', str)
+    )),
+    'itcont': OrderedDict((
+        ('cmte_id', str),
+        ('amndt_ind', str),
+        ('rpt_tp', str),
+        ('transaction_pgi', str),
+        ('transaction_tp', str),
+        ('entity_tp', str),
+        ('name', str),
+        ('city', str),
+        ('state', str),
+        ('zip_code', str),
+        ('employer', str),
+        ('occupation', str),
+        ('transaction_dt', str),
+        ('transaction_amt', int),
+        ('other_id', str),
+        ('tran_id', str),
+        ('memo_cd', str)
+    )),
+    'itpas2': OrderedDict((
+        ('cmte_id', str),
+        ('amndt_ind', str),
+        ('rpt_tp', str),
+        ('transaction_pgi', str),
+        ('transaction_tp', str),
+        ('entity_tp', str),
+        ('name', str),
+        ('city', str),
+        ('state', str),
+        ('zip_code', str),
+        ('employer', str),
+        ('occupation', str),
+        ('transaction_dt', str),
+        ('transaction_amt', int),
+        ('other_id', str),
+        ('cand_id', str),
+        ('tran_id', str),
+        ('memo_cd', str)
+    )),
+    'itoth': OrderedDict((
+        ('cmte_id', str),
+        ('amndt_ind', str),
+        ('rpt_tp', str),
+        ('transaction_pgi', str),
+        ('transaction_tp', str),
+        ('entity_tp', str),
+        ('name', str),
+        ('city', str),
+        ('state', str),
+        ('zip_code', str),
+        ('employer', str),
+        ('occupation', str),
+        ('transaction_dt', str),
+        ('transaction_amt', int),
+        ('other_id', str),
+        ('tran_id', str),
+        ('memo_cd', str)
+    ))
+}
 
 # dict for classification codes and descriptions (WIP)
 # (k, v) = (code, description)
