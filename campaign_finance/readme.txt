@@ -44,14 +44,18 @@ Solution: tool to perform exploratory data analysis of campaign contributions an
 3.2. Directory Structure
 
 /campaign_finance
-    campaign_finance.py
-    config.py
-    extract.py
-    transform.py
-    load.py
+    campaign_finance.py - main script to run
+    config.py - host info for extract/load, file names, constants, etc.
+    extract.py - module for extract ops
+    transform.py - module for transform ops
+    load.py - module for load ops (to BigQuery)
     
     /data_master
-
+        - cn12.csv, cn14.csv, cn16.csv
+        - cm12.csv, cm14.csv, cm16.csv
+        - itcont12.csv, itcont14.csv, itcont16.csv
+        - itpas212.csv, itpas214.csv, itpas216.csv
+        - itoth12.csv, itoth14.csv, itoth16.csv
     /data_raw
         - cn12.txt, cn14.txt, cn16.txt
         - cm12.txt, cm14.txt, cm16.txt

@@ -1,11 +1,14 @@
 import sys
 import os
+import csv
+from numpy import loadtxt
 
 from collections import OrderedDict
 
 
 MAIN_DIR = os.getcwd()                  # main project directory
 RAW_DIR = MAIN_DIR + '/data_raw/'       # directory for raw data files
+CODE_DIR = MAIN_DIR + '/codes/'       # directory for classification code files
 MASTER_DIR = MAIN_DIR + '/data_master/' # directory for transformed master data files
 
 # FEC download page: http://www.fec.gov/finance/disclosure/ftpdet.shtml
@@ -20,15 +23,6 @@ PROJ_ID = 'campaign-finance-1295'
 
 DATA_ID = 'test205'
 STORE_ID = 'test205'
-
-# TABLE_ID = {
-#     'committees': ['cm12', 'cm14', 'cm16'],
-#     'candidates': ['cn12', 'cn14', 'cn16'],
-#     'indiv_contribs': ['itcont12', 'itcont14', 'itcont16'],
-#     'comm_contribs': ['itpas212', 'itpas214', 'itpas216'],
-#     'comm_transfers': ['itpas212', 'itpas214', 'itpas216']
-# }
-
 
 
 # election cycles
@@ -258,17 +252,24 @@ SCHEMA_NEW = {
 # dict for classification codes and descriptions (WIP)
 # (k, v) = (code, description)
 CLASS_CODES = {
-    'amndt_ind': {},
-    'cand_ici': {},
-    'cand_status': {},
-    'cmte_dsgn': {},
-    'cmte_filing_freq': {},
-    'cmte_tp': {},
-    'entity_tp': {},
-    'office': {},
-    'org_tp': {},
-    'pty_affiliation': {},
-    'rpt_tp': {},
-    'transaction_pgi': {},
-    'transaction_tp': {}
+    'amndt_ind': '',
+    'cand_ici': '',
+    'cand_status': '',
+    'cmte_dsgn': '',
+    'cmte_filing_freq': '',
+    'cmte_tp': '',
+    'entity_tp': '',
+    'office': '',
+    'org_tp': '',
+    'pty_affiliation': '',
+    'rpt_tp': '',
+    'transaction_pgi': '',
+    'transaction_tp': ''
 }
+
+for key in CLASS_CODES.keys():
+    file = 'cd_%s.csv' % key
+    print csv
+    keyval = loadtxt(CODE_DIR + file, delimiter=',', dtype=)
+    CLASS_CODES[key] = dict()
+    print CLASS_CODES

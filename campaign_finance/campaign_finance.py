@@ -10,7 +10,7 @@ def job():
     transform()
     load()
 
-schedule.every().saturday.at('17:03').do(job)
+schedule.every().saturday.at('19:03').do(job)
 
 while True:
     schedule.run_pending()

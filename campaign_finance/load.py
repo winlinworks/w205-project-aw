@@ -93,7 +93,7 @@ def load():
 
     # for each election cycle
     for year in ELECTION_YEARS:
-        print('Loading candidate and committee data for %s...' % year)
+        print('Loading candidate, committee, and contribution/transfer data for %s...' % year)
 
         # load each file type
         for zip_type, txt_type in FILE_TYPES.items():
@@ -102,12 +102,13 @@ def load():
             schema_file = 'scm_%s.json' % txt_type
             data_file = txt_type + year[2:] + '.csv'
 
+            print('Loading: %s into %s.%s' % (data_file, DATA_ID, table_id))
+            
             load_data(PROJ_ID, DATA_ID, table_id, MASTER_DIR + schema_file, MASTER_DIR + data_file)
 
-            print('Loaded: %s into %s.%s' % (data_file, DATA_ID, table_id))
+            # print('Loaded: %s into %s.%s' % (data_file, DATA_ID, table_id))
 # [END load]
 
 
 # if __name__ == '__main__':
 #     load()
-    

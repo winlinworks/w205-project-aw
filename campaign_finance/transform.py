@@ -35,6 +35,22 @@ def filter_cands(year):
 # [END filter_cands]
 
 
+# [START filter_comms]
+def filter_comms(year):
+    schema_new = SCHEMA_NEW['cm']   # data types
+    file = 'cm%s.csv' % year[2:]
+    df = pd.read_csv(MASTER_DIR + file, header=None, index_col=0, names=schema_new, dtype=schema_new)     # read csv into dataframe
+    x = len(df)
+
+    df = df[df['cmte_pty_affiliation'].isin(INCLUDE_PTY)]   # filter included party affiliations
+    y = len(df)
+
+    df.to_csv(MASTER_DIR + file, header=None)  # save csv to master data folder
+
+    print('-- Filtered candidates: %s (%i -> %i rows)' % (file, x, y))
+# [END filter_comms]
+
+
 # [START filter_indiv_contribs]
 def filter_indiv_contribs(year):
     schema_new = SCHEMA_NEW['itcont']   # data types
@@ -67,6 +83,21 @@ def filter_comm_contribs(year):
 # [END filter_comm_contribs]
 
 
+# [START denorm_comm_contribs]
+def denorm_comm_contribs(year):
+    file = 'itpas2%s.csv' % year[2:]
+    df = pd.read_csv(MASTER_DIR + file, header=None, index_col=0, names=schema_new, dtype=schema_new)     # read csv into dataframe
+    x = len(df)
+
+    df = df[df['transaction_tp'].isin(INCLUDE_TRANS)]   # filter transaction types
+    y = len(df)
+
+    df.to_csv(MASTER_DIR + file, header=None)  # save csv to master data folder
+
+    print('-- Filtered committee contributions: %s (%i -> %i rows)' % (file, x, y))
+# [END denorm_comm_contribs]
+
+
 # [START filter_comm_transfers]
 def filter_comm_transfers(year):
     schema_new = SCHEMA_NEW['itoth']   # data types
@@ -97,6 +128,7 @@ def transform():
 
         # filter rows for each file type
         filter_cands(year)
+        filter_comms(year)
         filter_indiv_contribs(year)
         filter_comm_contribs(year)
         filter_comm_transfers(year)
