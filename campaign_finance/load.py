@@ -89,7 +89,7 @@ def load_data(project_id, dataset_id, table_id, schema_file, data_file):
 
 
 # [START load]
-def load_all():
+def load():
 
     # for each election cycle
     for year in ELECTION_YEARS:
@@ -108,9 +108,6 @@ def load_all():
 # [END load]
 
 
-if __name__ == '__main__':
-
-    load_all()
-    # load_cands()
-    # load_contrib_trans()
-
+# if __name__ == '__main__':
+#     load()
+    

@@ -55,8 +55,8 @@ def unzip_file(zip_type, txt_type, year):
 # [END unzip_file]
 
 
-# [START extract_all]
-def extract_all():
+# [START extract]
+def extract():
 
     print('Welcome to Campaign Finance Explorer...\n')
 
@@ -79,9 +79,6 @@ def extract_all():
 # [END extract]
 
 
-if __name__ == '__main__':
-
-    extract_all()
-    # extract_cand_comm()
-    # extract_contrib_trans()
-
+# if __name__ == '__main__':
+#     extract()
+    

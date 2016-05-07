@@ -5,18 +5,25 @@ tar xzf Python-2.7.11.tgz
 cd Python-2.7.11
 ./configure
 make altinstall
-mv /usr/bin/python /usr/bin/python266
-ln -s /usr/bin/Python-2.7.11/python /usr/bin/python
+
 python -V
 
 sudo curl -o ez_setup.py https://bootstrap.pypa.io/ez_setup.py
 sudo python ez_setup.py
-sudo /usr/bin/easy_install-2.7 pip
+sudo /usr/bin/easy_install-2.6 pip
 sudo pip install virtualenv
+sudo pip install --upgrade pip
 
+cd /w205-project-aw
 virtualenv -p /usr/bin/python2.7 venv
+source /venv/bin/activate
 
-mkdir data_raw
-mkdir data_master
 
-pip install pandas
+
+sudo pip install pandas
+sudo pip install --upgrade google-api-python-client
+sudo pip install schedule
+
+
+mv /usr/bin/python /usr/bin/python266
+ln -s /usr/bin/Python-2.7.11/python /usr/bin/python

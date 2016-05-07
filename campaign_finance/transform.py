@@ -102,7 +102,5 @@ def transform():
         filter_comm_transfers(year)
 # [END transform]
 
-if __name__ == '__main__':
-
-    transform()
-
+# if __name__ == '__main__':
+#     transform()
